@@ -39,7 +39,11 @@ pipeline{
             steps{
                 script{
                     dir('kubernetes/') {
-                        sh 'helm datree test myapp/'
+                        withCredentials([string(credentialsId: 'datree_token', variable: 'datree_token')]) {
+                            sh 'helm datree test myapp/'
+
+                        }
+                        
                     }
                 }
             }
