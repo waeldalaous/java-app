@@ -39,13 +39,31 @@ pipeline{
             steps{
                 script{
                     dir('kubernetes/') {
-                            sh 'helm datree config set token 53507bf0-78a3-4750-935f-81b8d9eb9b16'
+                        withCredentials([string(credentialsId: 'datree_token', variable: 'datree_token')]) {
+                            sh 'helm datree config set token ${datree_token}'
                             sh 'helm datree test myapp/'
 
-                        
                         }
+                        
+                    }
                 }
             }
+        }
+        stage("push helm charts to nexus"){
+            steps{
+                withCredentials([string(credentialsId: 'docker_pass', variable: 'docker_pass')]) {
+                    dir('kubernetes/') {
+                        sh '''
+                        helmversion=$(helm show chart myapp/ | grep version | cut -d: -f 2 | tr -d ' ')
+                        tar -czvf myapp-${helmversion}.tgz myapp/
+                        curl -u admin:$docker_pass http://192.168.198.137:8081/repository/helm-repo/ --upload-file myapp-${helmversion}.tgz -v
+                        '''
+                        
+                    }
+                }
+                
+            }
+        
         }
     }
 }
