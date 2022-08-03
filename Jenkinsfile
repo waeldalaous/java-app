@@ -35,7 +35,7 @@ pipeline{
                 
             }
         }
-        stage('identifying misconfigs using datree in helm charts'){
+        /*stage('identifying misconfigs using datree in helm charts'){
             steps{
                 script{
                     dir('kubernetes/') {
@@ -48,7 +48,7 @@ pipeline{
                     }
                 }
             }
-        }
+        }*/
         stage("push helm charts to nexus"){
             steps{
                 withCredentials([string(credentialsId: 'docker_pass', variable: 'docker_pass')]) {
