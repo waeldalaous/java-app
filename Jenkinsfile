@@ -71,7 +71,7 @@ pipeline{
 	    		    withCredentials([kubeconfigContent(credentialsId: 'kubernetes_config', variable: 'KUBECONFIG_CONTENT')]){
 			            dir ("kubernetes/"){  
 				            sh 'helm list'
-				            sh 'helm upgrade --install --set image.repository="nexus_ip:8083/springapp" --set image.tag="${VERSION}" myjavaapp myapp/ ' 
+				            sh 'helm upgrade --install --set image.repository="192.168.198.137:8083/springapp" --set image.tag="${VERSION}" myjavaapp myapp/ ' 
 			            }
 	    		    }
 	            }
